@@ -3,7 +3,7 @@
     .form
       .form_input
         input.form_input-style(v-model="city" placeholder="Введите город")
-        p.form_p-style Искать по городу: {{city}}
+        p.form_p-style Искать по городу: {{query || city}}
         p.form_reply {{reply}}
       FormElement(:todayWeather="todayWeather" :date="date" :isView="view" :weatherForecast="weatherForecast")
 </template>
@@ -22,7 +22,8 @@ export default {
         date: "",
         view: false,
         coordinates: {},
-        weatherForecast: []
+        weatherForecast: [],
+        query: ""
       };
   },
   watch: {
@@ -33,12 +34,26 @@ export default {
     }
   },
   created() {
+    if (this.$route.query.q) {
+      this.query = this.$route.query.q
+      this.getWeather()
+    }
     this.debouncedReply = _.debounce(this.getReply, 1000)
   },
   methods: {
-    async getReply() {
+    getReply() {
       this.reply = "Считаю звезды на небе..."
-      await this.$store.dispatch("getTodayWeather", this.city)
+      this.getWeather()
+      setTimeout(()=> {
+        this.reply = ""
+      }, 500)
+    },
+    async getWeather() {
+      if(this.query) {
+        await this.$store.dispatch("getTodayWeather", this.query)
+      } else {
+        await this.$store.dispatch("getTodayWeather", this.city)
+      }
       this.todayWeather = this.$store.getters["todayWeather"]
       this.date = this.$store.getters["date"]
       this.view = this.$store.getters["view"]
@@ -46,9 +61,6 @@ export default {
       await this.$store.dispatch("getNextDaysWeather", this.coordinates)
       this.weatherForecast = this.$store.getters["weatherForecast"]
       this.weatherForecast.shift()
-      setTimeout(()=> {
-        this.reply = ""
-      }, 500)
     }
   }
 }
