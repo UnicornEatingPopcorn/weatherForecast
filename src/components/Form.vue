@@ -4,8 +4,8 @@
       .form_input
         input.form_input-style(v-model="city" placeholder="Введите город")
         p.form_p-style Искать по городу: {{city}}
-        p {{reply}}
-      FormElement(:todayWeather="todayWeather" :dates="dates" :isView="view")
+        p.form_reply {{reply}}
+      FormElement(:todayWeather="todayWeather" :dates="dates" :isView="view" :weatherForecast="weatherForecast")
 </template>
 
 <script>
@@ -20,7 +20,9 @@ export default {
         reply: "",
         todayWeather: {},
         dates: [],
-        view: false
+        view: false,
+        coordinates: {},
+        weatherForecast: []
       };
   },
   watch: {
@@ -39,6 +41,9 @@ export default {
       this.todayWeather = this.$store.getters["todayWeather"]
       this.dates = this.$store.getters["dates"]
       this.view = this.$store.getters["view"]
+      this.coordinates = this.$store.getters["coordinates"]
+      await this.$store.dispatch("getNextDaysWeather", this.coordinates)
+      this.weatherForecast = this.$store.getters["weatherForecast"]
       setTimeout(()=> {
         this.reply = ""
       }, 500)
@@ -65,7 +70,7 @@ export default {
   ::after
     background-image: url(../assets/background.jpeg)
     background-size: cover
-    opacity: 0.1
+    /* opacity: 0.1 */
     top: 0
     left: 0
     bottom: 0
@@ -86,4 +91,12 @@ export default {
 
   &_p-style
     font-size: 18px
+    margin: 0
+    color: white
+
+  &_reply
+    height: 30px
+    width: 100%
+    margin: 0
+    color: white
 </style>

@@ -13,6 +13,8 @@
       div
         li(v-for="afterName in afterNames")
           h5 {{afterName}}
+    li(v-for="forecast in weatherForecast")
+      p {{forecast}}
 </template>
 
 <script>
@@ -20,7 +22,8 @@ export default {
   props: {
     todayWeather: Object,
     dates: Array,
-    isView: Boolean
+    isView: Boolean,
+    weatherForecast: Array,
   },
   data() {
     return {
@@ -29,9 +32,9 @@ export default {
       ],
       afterNames: [
       "°С", "%"
-      ]
+      ],
     }
-  }
+  },
 }
 </script>
 
