@@ -6,7 +6,7 @@ export default {
       temp: 0,
       humidity: 0,
     },
-    dates: [],
+    date: "",
     view: false,
     coordinates: {
       lon: 0,
@@ -19,8 +19,8 @@ export default {
       state.todayWeather.temp = todayWeather.temp;
       state.todayWeather.humidity = todayWeather.humidity;
     },
-    SET_DATES(state, date) {
-      state.dates.push(new Date(date).toLocaleDateString());
+    SET_DATE(state, date) {
+      state.date = new Date(date).toLocaleDateString();
     },
     SET_VIEW(state, view) {
       state.view = view;
@@ -30,15 +30,15 @@ export default {
       state.coordinates.lat = coordinates.lat;
     },
     SET_WEATHER_FORECAST(state, weatherForecast) {
-      state.weatherForecast = weatherForecast;
+      state.weatherForecast = weatherForecast.slice(0, 5);
     },
   },
   getters: {
     todayWeather(state) {
       return state.todayWeather;
     },
-    dates(state) {
-      return state.dates;
+    date(state) {
+      return state.date;
     },
     view(state) {
       return state.view;
@@ -56,7 +56,7 @@ export default {
         .getWeatherByCity(city)
         .then((response) => {
           commit("SET_TODAY_WEATHER", response.data.main);
-          commit("SET_DATES", Date(response.data.dt));
+          commit("SET_DATE", Date(response.data.dt));
           commit("SET_VIEW", true);
           commit("SET_COORDINATES", response.data.coord);
         })

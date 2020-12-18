@@ -1,14 +1,8 @@
 <template lang="pug">
-  .form-block
+  li.form-block
     .form-element(v-if="isView")
+      p.margin {{date}}
       div
-        li.date(v-for="date in dates")
-          h4 {{date}}
-        li.date(v-for="forecast in weatherForecast")
-          p {{new Date(forecast.dt * 1000).toLocaleDateString()}}
-      div
-        li(v-for="name in names")
-          h5 {{name}}
         li(v-for="name in names")
           h5 {{name}}
       div
@@ -18,13 +12,25 @@
         li(v-for="afterName in afterNames")
           h5 {{afterName}}
 
+    .form-element(v-if="isView" v-for="forecast in weatherForecast")
+      p.margin {{new Date(forecast.dt * 1000).toLocaleDateString()}}
+      div
+        li(v-for="name in names")
+          h5 {{name}}
+      div
+        li
+          h5 {{forecast.temp.day}}
+          h5 {{forecast.humidity}}
+      div
+        li(v-for="afterName in afterNames")
+          h5 {{afterName}}
 </template>
 
 <script>
 export default {
   props: {
     todayWeather: Object,
-    dates: Array,
+    date: String,
     isView: Boolean,
     weatherForecast: Array,
   },
@@ -49,6 +55,7 @@ li
 
 .form-block
   display: flex
+  flex-direction: column
   justify-content: flex-start
   width: 350px
   height: 360px
@@ -58,9 +65,9 @@ li
   overflow: scroll
 
 .form-element
-  display: contents
+  display: inherit
 
-.date
-  height: 80px
-
+.margin
+  margin-left: 26px
+  margin-top: 20px
 </style>

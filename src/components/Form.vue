@@ -5,7 +5,7 @@
         input.form_input-style(v-model="city" placeholder="Введите город")
         p.form_p-style Искать по городу: {{city}}
         p.form_reply {{reply}}
-      FormElement(:todayWeather="todayWeather" :dates="dates" :isView="view" :weatherForecast="weatherForecast")
+      FormElement(:todayWeather="todayWeather" :date="date" :isView="view" :weatherForecast="weatherForecast")
 </template>
 
 <script>
@@ -19,7 +19,7 @@ export default {
         city: '',
         reply: "",
         todayWeather: {},
-        dates: [],
+        date: "",
         view: false,
         coordinates: {},
         weatherForecast: []
@@ -40,7 +40,7 @@ export default {
       this.reply = "Считаю звезды на небе..."
       await this.$store.dispatch("getTodayWeather", this.city)
       this.todayWeather = this.$store.getters["todayWeather"]
-      this.dates = this.$store.getters["dates"]
+      this.date = this.$store.getters["date"]
       this.view = this.$store.getters["view"]
       this.coordinates = this.$store.getters["coordinates"]
       await this.$store.dispatch("getNextDaysWeather", this.coordinates)
