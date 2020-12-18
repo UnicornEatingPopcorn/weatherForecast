@@ -2,9 +2,13 @@
   .form-block
     .form-element(v-if="isView")
       div
-        li(v-for="date in dates")
+        li.date(v-for="date in dates")
           h4 {{date}}
+        li.date(v-for="forecast in weatherForecast")
+          p {{new Date(forecast.dt * 1000).toLocaleDateString()}}
       div
+        li(v-for="name in names")
+          h5 {{name}}
         li(v-for="name in names")
           h5 {{name}}
       div
@@ -13,8 +17,7 @@
       div
         li(v-for="afterName in afterNames")
           h5 {{afterName}}
-    li(v-for="forecast in weatherForecast")
-      p {{forecast}}
+
 </template>
 
 <script>
@@ -56,5 +59,8 @@ li
 
 .form-element
   display: contents
+
+.date
+  height: 80px
 
 </style>

@@ -29,6 +29,7 @@ export default {
     city() {
       this.reply = "Жду, когда вы закончите печатать..."
       this.debouncedReply()
+      this.$router.push({query: {q: this.city}})
     }
   },
   created() {
@@ -44,6 +45,7 @@ export default {
       this.coordinates = this.$store.getters["coordinates"]
       await this.$store.dispatch("getNextDaysWeather", this.coordinates)
       this.weatherForecast = this.$store.getters["weatherForecast"]
+      this.weatherForecast.shift()
       setTimeout(()=> {
         this.reply = ""
       }, 500)
@@ -60,7 +62,7 @@ export default {
 
 .form
   width: 400px
-  height: 500px
+  height: 550px
   border: solid 1px #dad4d1
   border-radius: 2px
   margin-top: 40px
@@ -70,7 +72,6 @@ export default {
   ::after
     background-image: url(../assets/background.jpeg)
     background-size: cover
-    /* opacity: 0.1 */
     top: 0
     left: 0
     bottom: 0
@@ -91,12 +92,12 @@ export default {
 
   &_p-style
     font-size: 18px
-    margin: 0
-    color: white
+    background: #f6f6f685
+    margin-bottom: 0px
 
   &_reply
     height: 30px
     width: 100%
-    margin: 0
-    color: white
+    margin-top: 0px
+    background: #f6f6f685
 </style>
