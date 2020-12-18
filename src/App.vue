@@ -1,11 +1,21 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Узнать погоду</router-link>
+      <router-link to="/" @click.native="resetState">Узнать погоду</router-link>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    resetState() {
+      window.location.reload()
+    }
+  }
+}
+</script>
 
 <style>
 #app {

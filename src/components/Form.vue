@@ -37,6 +37,8 @@ export default {
     if (this.$route.query.q) {
       this.query = this.$route.query.q
       this.getWeather()
+    } else {
+      this.query = ""
     }
     this.debouncedReply = _.debounce(this.getReply, 1000)
   },
