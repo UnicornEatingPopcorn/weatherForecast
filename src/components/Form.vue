@@ -30,13 +30,16 @@ export default {
     city() {
       this.reply = "Жду, когда вы закончите печатать..."
       this.debouncedReply()
-      this.$router.push({query: {q: this.city}})
+      this.$router.push({query: {city: this.city}})
     }
   },
   created() {
-    if (this.$route.query.q) {
-      this.query = this.$route.query.q
-      this.getWeather()
+    if (this.$route.query.city) {
+      this.query = this.$route.query.city
+      this.city = this.query
+      if (this.query.length > 0) {
+        this.getWeather()
+      }
     } else {
       this.query = ""
     }
@@ -45,10 +48,16 @@ export default {
   methods: {
     getReply() {
       this.reply = "Считаю звезды на небе..."
-      this.getWeather()
-      setTimeout(()=> {
-        this.reply = ""
-      }, 500)
+      if (this.city.length > 0) {
+        this.getWeather()
+        setTimeout(()=> {
+          this.reply = ""
+        }, 500)
+      } else {
+        this.view = false
+        this.reply = "Укажите город"
+      }
+
     },
     async getWeather() {
       if(this.query) {

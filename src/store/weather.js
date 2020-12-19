@@ -30,7 +30,15 @@ export default {
       state.coordinates.lat = coordinates.lat;
     },
     SET_WEATHER_FORECAST(state, weatherForecast) {
-      state.weatherForecast = weatherForecast.slice(0, 5);
+      const today = new Date().toLocaleDateString();
+      const firstDate = weatherForecast.findIndex(
+        (day) => today === new Date(day.dt * 1000).toLocaleDateString()
+      );
+      if (firstDate > 0) {
+        state.weatherForecast = weatherForecast.slice(firstDate, 6);
+      } else {
+        state.weatherForecast = weatherForecast.slice(0, 6);
+      }
     },
   },
   getters: {
@@ -62,6 +70,8 @@ export default {
         })
         .catch((error) => {
           console.log("There was an error", error.response);
+          alert("Такого города нет, попробуйте еще раз");
+          commit("SET_VIEW", false);
         });
     },
     async getNextDaysWeather({ commit }, coordinates) {
