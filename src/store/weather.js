@@ -7,7 +7,7 @@ export default {
       humidity: 0,
     },
     date: "",
-    view: false,
+    isView: false,
     coordinates: {
       lon: 0,
       lat: 0,
@@ -22,8 +22,8 @@ export default {
     SET_DATE(state, date) {
       state.date = new Date(date).toLocaleDateString();
     },
-    SET_VIEW(state, view) {
-      state.view = view;
+    SET_IS_VIEW(state, isView) {
+      state.isView = isView;
     },
     SET_COORDINATES(state, coordinates) {
       state.coordinates.lon = coordinates.lon;
@@ -35,9 +35,9 @@ export default {
         (day) => today === new Date(day.dt * 1000).toLocaleDateString()
       );
       if (firstDate > 0) {
-        state.weatherForecast = weatherForecast.slice(firstDate, 6);
+        state.weatherForecast = weatherForecast.slice(firstDate, 5);
       } else {
-        state.weatherForecast = weatherForecast.slice(0, 6);
+        state.weatherForecast = weatherForecast.slice(0, 5);
       }
     },
   },
@@ -48,8 +48,8 @@ export default {
     date(state) {
       return state.date;
     },
-    view(state) {
-      return state.view;
+    isView(state) {
+      return state.isView;
     },
     coordinates(state) {
       return state.coordinates;
@@ -60,30 +60,27 @@ export default {
   },
   actions: {
     async getTodayWeather({ commit }, city) {
-      await weatherApi
-        .getWeatherByCity(city)
-        .then((response) => {
-          commit("SET_TODAY_WEATHER", response.data.main);
-          commit("SET_DATE", Date(response.data.dt));
-          commit("SET_VIEW", true);
-          commit("SET_COORDINATES", response.data.coord);
-        })
-        .catch((error) => {
-          console.log("There was an error", error.response);
-          alert("Такого города нет, попробуйте еще раз");
-          commit("SET_VIEW", false);
-        });
+      try {
+        const response = await weatherApi.getWeatherByCity(city);
+        commit("SET_TODAY_WEATHER", response.data.main);
+        commit("SET_DATE", Date(response.data.dt));
+        commit("SET_IS_VIEW", true);
+        commit("SET_COORDINATES", response.data.coord);
+      } catch (error) {
+        commit("SET_IS_VIEW", false);
+        return Promise.reject(error);
+      }
     },
+
     async getNextDaysWeather({ commit }, coordinates) {
-      await weatherApi
-        .getWeatherByCoordinates(coordinates)
-        .then((response) => {
-          commit("SET_WEATHER_FORECAST", response.data.daily);
-          commit("SET_VIEW", true);
-        })
-        .catch((error) => {
-          console.log("There was an error", error.response);
-        });
+      try {
+        const response = await weatherApi.getWeatherByCoordinates(coordinates);
+        commit("SET_WEATHER_FORECAST", response.data.daily);
+        commit("SET_IS_VIEW", true);
+      } catch (error) {
+        commit("SET_IS_VIEW", false);
+        return Promise.reject(error);
+      }
     },
   },
 };

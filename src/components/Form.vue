@@ -2,10 +2,10 @@
   .form-component
     .form
       .form_input
-        input.form_input-style(v-model="city" placeholder="Введите город")
-        p.form_p-style Искать по городу: {{query || city}}
+        input.form_input-style(v-model="query" @input="fetchCity" placeholder="Введите город")
+        p.form_p-style Искать по городу: {{query}}
         p.form_reply {{reply}}
-      FormElement(:todayWeather="todayWeather" :date="date" :isView="view" :weatherForecast="weatherForecast")
+      FormElement(:todayWeather="todayWeather" :date="date" :isView="isView" :weatherForecast="weatherForecast")
 </template>
 
 <script>
@@ -16,62 +16,64 @@ export default {
   components: {FormElement},
   data() {
     return {
-        city: '',
         reply: "",
-        todayWeather: {},
-        date: "",
-        view: false,
-        coordinates: {},
-        weatherForecast: [],
         query: ""
       };
   },
-  watch: {
-    city() {
-      this.reply = "Жду, когда вы закончите печатать..."
-      this.debouncedReply()
-      this.$router.push({query: {city: this.city}})
+  computed: {
+    coordinates() {
+      return this.$store.getters["coordinates"]
+    },
+    todayWeather() {
+      return this.$store.getters["todayWeather"]
+    },
+    date() {
+      return this.$store.getters["date"]
+    },
+    isView() {
+      return this.$store.getters["isView"]
+    },
+    weatherForecast() {
+      return this.$store.getters["weatherForecast"]
     }
   },
-  created() {
-    if (this.$route.query.city) {
-      this.query = this.$route.query.city
-      this.city = this.query
-      if (this.query.length > 0) {
-        this.getWeather()
-      }
-    } else {
-      this.query = ""
+  async created() {
+    this.query = this.$route.query.city
+
+    if (this.query.length > 0) {
+      await this.getWeather()
     }
-    this.debouncedReply = _.debounce(this.getReply, 1000)
   },
   methods: {
-    getReply() {
+    debouncedReply: _.debounce(function() {
+      this.getReply()
+    }, 1000),
+    fetchCity() {
+      this.reply = "Жду, когда вы закончите печатать..."
+      this.debouncedReply()
+
+      this.$router.push({query: {city: this.query}})
+    },
+    async getReply() {
       this.reply = "Считаю звезды на небе..."
-      if (this.city.length > 0) {
-        this.getWeather()
-        setTimeout(()=> {
+      if (this.query.length > 0) {
+        await this.getWeather()
+        setTimeout(()=>{
           this.reply = ""
         }, 500)
       } else {
-        this.view = false
         this.reply = "Укажите город"
       }
-
     },
     async getWeather() {
-      if(this.query) {
+      try {
         await this.$store.dispatch("getTodayWeather", this.query)
-      } else {
-        await this.$store.dispatch("getTodayWeather", this.city)
+        await this.$store.dispatch("getNextDaysWeather", this.coordinates)
+        this.weatherForecast.shift()
+      } catch(error) {
+        alert("Такого города нет, пожалуйста попробуйте еще раз")
+        console.error(error)
       }
-      this.todayWeather = this.$store.getters["todayWeather"]
-      this.date = this.$store.getters["date"]
-      this.view = this.$store.getters["view"]
-      this.coordinates = this.$store.getters["coordinates"]
-      await this.$store.dispatch("getNextDaysWeather", this.coordinates)
-      this.weatherForecast = this.$store.getters["weatherForecast"]
-      this.weatherForecast.shift()
     }
   }
 }
