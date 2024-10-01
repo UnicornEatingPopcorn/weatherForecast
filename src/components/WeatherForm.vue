@@ -1,14 +1,14 @@
 <script setup lang="js">
 import { ref, onMounted, computed } from "vue";
 import FormElement from "@/components/FormElement.vue";
-import { useCounterStore } from "@/stores/counter";
+import { useStore } from "vuex";
 import { useRoute, useRouter } from 'vue-router';
 
-const store = useCounterStore();
 const reply = ref("");
 const query = ref("");
 const route = useRoute();
 const router = useRouter();
+const store = useStore();
 
 const coordinates = computed(() => store.getters['coordinates']);
 const todayWeather = computed(() => store.getters['todayWeather']);
@@ -47,10 +47,8 @@ const getReply = async () => {
 const getWeather = async () => {
   try {
     await store.dispatch('getTodayWeather', query.value);
-    await store.dispatch('getNextDaysWeather', coordinates.value);
-    weatherForecast.value.shift();
+    await store.dispatch("getNextDaysWeather", coordinates.value);
   } catch (error) {
-    alert('There is no such city, try again');
     console.error(error);
   }
 };
@@ -73,10 +71,60 @@ onMounted(async () => {
         <p class="form_reply">{{ reply }}</p>
       </div>
       <FormElement
+        :coordinates="coordinates"
         :todayWeather="todayWeather"
         :date="date"
         :isView="isView"
-        :weatherForecast="weatherForecast"/>
+        :weatherForecast="weatherForecast"
+        />
     </div>
   </div>
 </template>
+
+<style lang="sass">
+.form-component
+  display: flex
+  align-items: center
+  justify-content: center
+
+.form
+  width: 400px
+  height: 550px
+  border: solid 1px #dad4d1
+  border-radius: 2px
+  margin-top: 40px
+  position: relative
+  overflow: scroll
+
+  ::after
+    background-image: url("../assets/background.webp")
+    background-size: cover
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    z-index: -1
+    content: ""
+
+  &_input
+    margin-top: 30px
+
+    &-style
+      width: 200px
+      height: 30px
+      font-size: 20px
+      border: none
+      border-radius: 6px
+
+  &_p-style
+    font-size: 18px
+    background: #f6f6f685
+    margin-bottom: 0px
+
+  &_reply
+    height: 30px
+    width: 100%
+    margin-top: 0px
+    background: #f6f6f685
+</style>

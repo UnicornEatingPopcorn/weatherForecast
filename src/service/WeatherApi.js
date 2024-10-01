@@ -9,7 +9,7 @@ const apiClient = axios.create({
   },
 });
 
-const my_env_var = import.meta.env.VUE_APP_ID
+const my_env_var = import.meta.env.VITE_APP_ID
 
 export default {
   getWeatherByCity(city) {
@@ -19,7 +19,7 @@ export default {
   },
   getWeatherByCoordinates(coordinates) {
     return apiClient.get(
-      `data/3.0/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${my_env_var}&units=metric`
+      `data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${my_env_var}&units=metric`
     );
   },
 };
