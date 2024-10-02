@@ -85,46 +85,46 @@ onMounted(async () => {
 .form-component
   display: flex
   align-items: center
-  justify-content: center
+  justify-content: end
 
 .form
-  width: 400px
+  width: 100%
   height: 550px
-  border: solid 1px #dad4d1
-  border-radius: 2px
-  margin-top: 40px
+  padding: 20px 5px 10px
   position: relative
-  overflow: scroll
 
-  ::after
-    background-image: url("../assets/background.webp")
-    background-size: cover
+  &::before
+    background-color: #01bd7e80
     top: 0
     left: 0
     bottom: 0
     right: 0
     position: absolute
+    border-radius: 7% 7% 0 0
     z-index: -1
     content: ""
 
   &_input
-    margin-top: 30px
+    margin-top: 20px
 
     &-style
-      width: 200px
-      height: 30px
+      width: 100%
+      height: 40px
       font-size: 20px
+      text-align: center
       border: none
-      border-radius: 6px
+      background: #181818
+      color: rgba(255, 164, 199, 0.768627451)
+
+    p
+      font-size: 18px
+      color: #181818
 
   &_p-style
-    font-size: 18px
-    background: #f6f6f685
     margin-bottom: 0px
 
   &_reply
     height: 30px
     width: 100%
     margin-top: 0px
-    background: #f6f6f685
 </style>

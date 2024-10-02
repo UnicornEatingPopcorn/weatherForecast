@@ -29,81 +29,87 @@ const afterTitles = ["°С", "%"];
 </script>
 
 <template>
-  <p>FORM ELEMENT</p>
-  <ul class="form-block">
-    <li class="form-element">
-      <p class="margin">{{ date }}</p>
-      <div>
-        <ul>
-          <li v-for="title in titles" v-bind:key="title.id">
-            <h5>{{ title }}</h5>
-          </li>
-        </ul>
+  <div class="form-block">
+    <div class="form-element" v-if="isView">
+      <p class="form-element__date">{{ date }}</p>
+      <div class="form-element__titles">
+        <div v-for="title in titles" v-bind:key="title.id" class="form-element__title">
+          <h5>{{ title }}</h5>
+        </div>
       </div>
-      <div>
-        <ul>
-          <li v-for="today in todayWeather" v-bind:key="today.id">
-            <h5>{{ today }}</h5>
-          </li>
-        </ul>
+      <div class="form-element__datas">
+        <div v-for="today in todayWeather" v-bind:key="today.id" class="form-element__data">
+          <h5>{{ today }}</h5>
+        </div>
       </div>
-      <div>
-        <ul>
-          <li v-for="afterTitle in afterTitles" v-bind:key="afterTitle.id">
-            <h5>{{ afterTitle }}</h5>
-          </li>
-        </ul>
+      <div class="form-element__metrics">
+        <div v-for="afterTitle in afterTitles" v-bind:key="afterTitle.id" class="form-element__metric">
+          <h5>{{ afterTitle }}</h5>
+        </div>
       </div>
-    </li>
+    </div>
 
-    <li class="form-element" v-for="forecast in weatherForecast" v-bind:key="forecast.id">
-      <p class="margin">{{ new Date(forecast.dt * 1000).toLocaleDateString() }}</p>
-      <div>
-        <ul>
-          <li v-for="title in titles" v-bind:key="title.id">
+    <div v-if="isView">
+      <div class="form-element" v-for="forecast in weatherForecast" v-bind:key="forecast.id">
+        <p class="form-element__date">{{ new Date(forecast.dt * 1000).toLocaleDateString() }}</p>
+        <div class="form-element__titles">
+          <div v-for="title in titles" v-bind:key="title.id" class="form-element__title">
             <h5>{{ title }}</h5>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <ul>
-          <li>
+          </div>
+        </div>
+        <div class="form-element__datas">
+          <div class="form-element__data">
             <h5>{{ forecast.main.temp }}</h5>
             <h5>{{ forecast.main.humidity }}</h5>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <ul>
-          <li v-for="afterTitle in afterTitles" v-bind:key="afterTitle.id">
+          </div>
+        </div>
+        <div class="form-element__metrics">
+          <div v-for="afterTitle in afterTitles" v-bind:key="afterTitle.id" class="form-element__metric">
             <h5>{{ afterTitle }}</h5>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
 </template>
 
 <style lang="sass">
-li
-  display: block
-  font-size: 16px
-  color: black
-
 .form-block
   display: flex
   flex-direction: column
-  justify-content: flex-start
+  justify-content: center
   width: 100%
   height: 360px
-  padding: 0
-  background: white
-  overflow: scroll
+  padding: 20px
+  background: #181818
 
 .form-element
-  display: inherit
+  display: grid
+  grid-template-areas: "date title data metric"
+  grid-template-columns: 2fr repeat(3, 1fr)
+  grid-gap: 10px
+  align-items: center
+  font-size: 17px
+  color: #9f9f9f
+  padding: 5px 0 5px 35px
+  border-bottom: 1px solid #216b4c7d
 
-.margin
-  margin-left: 26px
-  margin-top: 20px
+  &__date
+    grid-area: date
+    color: #ffa4c7c4
+
+  &__titles
+    grid-area: title
+    justify-self: flex-end
+
+  &__datas
+    grid-area: data
+    color: #01bd7e
+
+    & h5
+      display: grid
+      justify-content: end
+
+  &__metrics
+    grid-area: metric
 </style>
