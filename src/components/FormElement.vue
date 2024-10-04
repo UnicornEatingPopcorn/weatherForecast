@@ -33,24 +33,14 @@ const afterTitles = ["°С", "%"];
 <template>
   <div class="form-block">
     <div class="form-element" v-if="isView">
-      <p class="form-element__date">{{ date }}</p>
-      <div class="form-element__titles">
-        <div v-for="title in titles" v-bind:key="title.id" class="form-element__title">
-          <h5>{{ title }}</h5>
-        </div>
-      </div>
-      <div class="form-element__datas">
-        <div v-for="today in todayWeather" v-bind:key="today.id" class="form-element__data">
-          <h5>{{ today }}</h5>
-        </div>
-      </div>
-      <div class="form-element__metrics">
-        <div v-for="afterTitle in afterTitles" v-bind:key="afterTitle.id" class="form-element__metric">
-          <h5>{{ afterTitle }}</h5>
-        </div>
-      </div>
+      <WeatherBlock
+        :titles="titles"
+        :todayWeather="todayWeather"
+        :afterTitles="afterTitles"
+        :date="date"
+        data-attr="today"
+      />
     </div>
-
     <div v-if="isView">
       <div class="form-element" v-for="forecast in weatherForecast" v-bind:key="forecast.id">
         <WeatherBlock
@@ -58,7 +48,8 @@ const afterTitles = ["°С", "%"];
           :titles="titles"
           :todayWeather="todayWeather"
           :afterTitles="afterTitles"
-          />
+          data-attr="forecast"
+        />
       </div>
     </div>
   </div>
