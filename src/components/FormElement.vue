@@ -75,23 +75,4 @@ const afterTitles = ["°С", "%"];
   color: #9f9f9f
   padding: 5px 0 5px 35px
   border-bottom: 1px solid #216b4c7d
-
-  &__date
-    grid-area: date
-    color: #ffa4c7c4
-
-  &__titles
-    grid-area: title
-    justify-self: flex-end
-
-  &__datas
-    grid-area: data
-    color: #01bd7e
-
-    & h5
-      display: grid
-      justify-content: end
-
-  &__metrics
-    grid-area: metric
 </style>
